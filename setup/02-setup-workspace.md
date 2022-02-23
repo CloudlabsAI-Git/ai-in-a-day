@@ -71,32 +71,17 @@
 
     ![Select agent pool type](./media/02-setup-agent-pool-type.png)
 
-3. In the newly created agent pool, create a new agent. Follow the instructions displayed on the screen (more detailed instructions are available at https://go.microsoft.com/fwlink/?LinkID=825113):
-
-    ![Create new agent in agent pool](media/02-setup-create-new-agent.png)
-
-    See the example below for configuring the agent. Notice the server URL, the PAT token being used, and the option to run the agent as a service:
-
-    ![Configure build agent](./media/02-setup-install-agent.png)
-
-    Upon successful configuration, the newly created agent must show up as `Online`:
-
-    ![Successfully configured build agent](./media/02-setup-running-agent.png)
-
-
-## Task 2 (Linux variant) - Configure a Linux VM as an Azure DevOps Build Agent
-
-1. Create a new Linux VM with the following specs (leave all other options default):
+3. Create a new Linux VM with the following specs (leave all other options default):
 
     ![Create new Linux VM](./media/02-setup-create-linux-vm.png)
 
-2. Install Docker on the VM running the following command (https://docs.docker.com/engine/install/ubuntu/):
+4. Install Docker on the VM running the following command (https://docs.docker.com/engine/install/ubuntu/):
 
     ```sh
     sudo snap install docker
     ```
 
-3. Configure the `devopsagent` user to run Docker (https://docs.docker.com/engine/install/linux-postinstall/):
+5. Configure the `devopsagent` user to run Docker (https://docs.docker.com/engine/install/linux-postinstall/):
 
     ```sh
     sudo groupadd docker
@@ -105,21 +90,35 @@
 
     Restart the VM to apply the changes.
 
-4. Download and install the Azure DevOps agent on Linux:
+6. Download and install the Azure DevOps agent on Linux:
 
     ![Install DevOps Agent on Linux](./media/02-setup-linux-agent.png)
 
     NOTE: You can use ```curl -O https://vstsagentpackage.azureedge.net/agent/2.192.0/vsts-agent-linux-x64-2.192.0.tar.gz``` to download the file.
+    
+7. Run the follwoing commands :
 
-5. Configure the agent according to the DevOps documentation: https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops.
+    ```
+    mkdir myagent && cd myagent
+    tar zxvf ~/vsts-agent-linux-x64-2.192.0.tar.gz
+    ```
+
+8. Configure the agent according to the DevOps documentation: https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops.
 
     The following commands must be run in the `myagent` folder:
 
     ```sh
-    sudo ./config.sh
+    ./config.sh
     sudo ./svc.sh install
     sudo ./svc.sh start
     ```
+    While running `./config.sh ` provide the Organization URl, PAT token and Agent pool name when asked.
+
+    Upon successful configuration, the newly created agent must show up as `Online`:
+
+    ![Successfully configured build agent](./media/02-setup-running-agent.png)
+
+
 
 ## Task 3 - Create an Azure DevOps Service Connection for the Azure ML Workspace
 
@@ -277,19 +276,10 @@ In the following steps you will create and run a new build pipeline based on the
 2. Navigate to the already genarated repository for this lab and select 
  **Settings** in order to configure the required secrets to allow GitHub Actions to access Azure.
 
-    First you will need an [Azure service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals). Just go to the Azure Portal to find the details of your resource group. Then start the Cloud CLI or install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) on your computer and execute the following command to generate the required credentials:
+    First you will need an [Azure service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals).\
+    You will already have a pre-created service principal. you can get the details from environment details page.
 
-    ```sh
-    # Replace {sp_XXXXX_githubactions} where XXXXX is the current user lab unique code, {subscription-id} and {AI-in-a-Day-XXXXX},{ai-in-a-day-XXXXX} with your 
-    # Azure subscription id, resource group and ml workspace name and assign any name for your service principal for eg {sp_XXXXX_githubactions}
-    
-    az ad sp create-for-rbac --name http://{sp_XXXXX_githubactions} \
-                            --role contributor \
-                            --scopes /subscriptions/{subscription-id}/resourceGroups/{AI-in-a-Day-XXXXX}/providers/Microsoft.MachineLearningServices/workspaces/{ai-in-a-day-XXXXX} \
-                            --sdk-auth
-    ```
-
-    This will generate the following JSON output:
+    Update `clientId, clientSecret, subscriptionId and tenantId` values with appropriate values from the service proncipal details page
 
     ```sh
     {
