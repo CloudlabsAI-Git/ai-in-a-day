@@ -149,14 +149,16 @@ Create a new service connection to your Azure ML Workspace to enable executing t
 1. Go to the [GitHub portal](https://github.com/) and sign in with the Git credentials provided for you.
 2. You will be asked to verify your account, so you should open your user's mailbox on https://outlook.office365.com/ to be able to receive the verification codes for GitHub authentication. Use the same GitHub user account credentials to open Outlook.
 
-3. In GitHub, while authenticated with the lab user, navigate to the following link to create a new git repository from the provided template:
+3. make sure there are no repositories with the name `azure-ai-in-a-day-lab02`. If we have any repository with this name already present in the GitHu account, Delete the repository and continue with the next step.
+
+4. In GitHub, while authenticated with the lab user, navigate to the following link to create a new git repository from the provided template:
    https://github.com/solliancenet/azure-ai-in-a-day-lab-02-starter/generate
 
-4. Set the repository name to `azure-ai-in-a-day-lab02` and select **Create repository from template**.
+5. Set the repository name to `azure-ai-in-a-day-lab02` and select **Create repository from template**.
 
     ![Generate git repository from template](../02-aml-mlops/media/02%20-%20github-%20generaterepo.png)
 
-5. When the new repository is generated, copy your repository URL from the browser address bar since you will need it in the next steps.
+6. When the new repository is generated, copy your repository URL from the browser address bar since you will need it in the next steps.
 
 
 ## Task 5 - Set up Build, Release Trigger, and Release Multi-Stage Pipelines
